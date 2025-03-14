@@ -4,9 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ROVER 記錄抹煞手速大賽</title>
     <style>
+        /* Ensure no margin or padding on html and body */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -15,12 +23,12 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
             font-family: system-ui;
             color: white;
+            user-select: none; /* Prevent text selection on the entire page */
 
             /* 📌 Set Background Image (Now fully visible) */
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('background.png') no-repeat center center fixed;
             background-size: contain; /* Ensures the whole image is visible */
             background-color: black; /* Fallback color */
         }
@@ -39,7 +47,7 @@
 
         #game-container {
             position: absolute;
-            bottom: 300px; /* Adjusted position to make space for the button container */
+            bottom: 240px; /* Adjusted position to make space for the button container */
             text-align: center;
             align-items: center;
             padding: 40px; /* Increased padding */
@@ -50,6 +58,7 @@
             flex-direction: column;
             justify-content: center;
             gap: 20px; /* Add consistent spacing between child elements */
+            user-select: none; /* Prevent text selection in this container */
         }
 
         #button-container {
@@ -59,6 +68,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px; /* Add spacing between buttons */
+            user-select: none; /* Prevent text selection in this container */
         }
 
         #countdown {
@@ -66,6 +76,7 @@
             font-size: 40px; /* Enlarged font size */
             font-weight: bold;
             margin: 0; /* Remove default margin */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add drop shadow */
         }
 
         #countdown-text {
@@ -73,6 +84,7 @@
             font-weight: bold;
             color: rgb(255, 255, 255);
             margin: 0; /* Remove default margin */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add drop shadow */
         }
 
         #click-count {
@@ -80,6 +92,7 @@
             font-weight: bold;
             color: rgb(255, 255, 255);
             margin: 0; /* Remove default margin */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add drop shadow */
         }
 
         button {
@@ -89,6 +102,7 @@
             border-radius: 10px;
             border: none;
             font-weight: bold;
+            touch-action: manipulation; /* Disable double-tap zoom */
         }
 
         #start-button, #retry-button {
@@ -120,11 +134,41 @@
             background-position: center center;
             background-size: cover; /* Ensure the image covers the button */
             margin: 10px 0; /* Add spacing around the button */
+            touch-action: manipulation; /* Disable double-tap zoom */
         }
 
         #game-image {
             width: 350px;
             margin-top: 20px;
+        }
+
+        /* Mobile-friendly adjustments */
+        @media (max-width: 768px) {
+            #game-container {
+                width: 90%; /* Make the container width responsive */
+                height: auto; /* Allow height to adjust based on content */
+                padding: 20px; /* Reduce padding for smaller screens */
+                bottom: 34%; /* Shift the container further down */
+                transform: translateY(50%); /* Center vertically */
+            }
+
+            #button-container {
+                width: 90%; /* Make the button container width responsive */
+                bottom: 20px; /* Position at the bottom of the screen */
+            }
+
+            #delete-button {
+                width: 100%; /* Make the delete button full width */
+                height: 100px; /* Adjust height for smaller screens */
+            }
+
+            #start-button, #retry-button {
+                width: 100%; /* Make buttons full width */
+            }
+
+            #countdown, #countdown-text, #click-count {
+                font-size: 24px; /* Reduce font size for smaller screens */
+            }
         }
     </style>
 </head>
@@ -201,20 +245,20 @@
             }
         });
 
-        // Handle delete button trigger via Delete key
-        let isDeleteKeyPressed = false; // Track if the Delete key is currently pressed
+        // Handle delete button trigger via Backspace key
+        let isBackspaceKeyPressed = false; // Track if the Backspace key is currently pressed
 
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Delete' && deleteButton.style.display === 'block' && !deleteButton.disabled) {
-                isDeleteKeyPressed = true; // Mark the Delete key as pressed
+            if (event.key === 'Backspace' && deleteButton.style.display === 'block' && !deleteButton.disabled) {
+                isBackspaceKeyPressed = true; // Mark the Backspace key as pressed
             }
         });
 
         document.addEventListener('keyup', (event) => {
-            if (event.key === 'Delete' && isDeleteKeyPressed) {
-                clickCount++; // Increment the counter only when the Delete key is released
+            if (event.key === 'Backspace' && isBackspaceKeyPressed) {
+                clickCount++; // Increment the counter only when the Backspace key is released
                 clickCountElement.textContent = `已刪除 ${clickCount} 次記錄`;
-                isDeleteKeyPressed = false; // Reset the pressed state
+                isBackspaceKeyPressed = false; // Reset the pressed state
             }
         });
 
